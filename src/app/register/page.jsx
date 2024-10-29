@@ -81,7 +81,7 @@ const OtpVerification = ({ register, errors, otpError, timeRemaining, handleNext
   );
 };
 
-const RegisterForm = ({ register, errors, handleNextStep }) => {
+const RegisterForm = ({ register, errors, handleNextStep, message }) => {
   const formData = [
     { type: 'phone', placeholder: 'Nomor telepon/handphone' },
     { type: 'name', placeholder: 'Nama' },
@@ -102,6 +102,7 @@ const RegisterForm = ({ register, errors, handleNextStep }) => {
       <button type='button' onClick={handleNextStep} className='bg-primary text-white px-6 py-2 rounded-md mt-4 w-full max-w-xs'>
         Daftar
       </button>
+      {message && <p className='text-red-500 text-sm mt-1 text-center'>{message}</p>}
       <div className='flex items-center justify-center'>
         <p className='text-sm'>Powered By</p>
         <Image src={LogoBankDKI} width={100} alt='logo Bank DKI Jakarta' className='my-4' />
@@ -154,12 +155,10 @@ const ConfirmPinForm = ({ register, errors, pinError, handleSubmit }) => (
   </form>
 );
 
-// Main Register Component
 const Register = () => {
   const dispatch = useDispatch();
-  const { step } = useSelector((state) => state.register);
+  const { step, message } = useSelector((state) => state.register);
   const { userId } = useSelector((state) => state.register.user);
-  console.log(userId);
   const [otpError, setOtpError] = useState('');
   const [pinError, setPinError] = useState('');
   const [timeRemaining, setTimeRemaining] = useState(30);
@@ -260,10 +259,9 @@ const Register = () => {
     <div>
       {step === 1 && <PhoneInput register={register} errors={errors} handleNextStep={handleNextStep} />}
       {step === 2 && <OtpVerification register={register} errors={errors} otpError={otpError} timeRemaining={timeRemaining} handleNextStep={handleNextStep} resendOtp={resendOtp} goBack={goBackToPhoneInput} />}
-      {step === 3 && <RegisterForm register={register} errors={errors} handleNextStep={handleNextStep} />}
+      {step === 3 && <RegisterForm register={register} errors={errors} handleNextStep={handleNextStep} message={message} />}
       {step === 4 && <PinForm register={register} errors={errors} handleNextStep={handleNextStep} />}
       {step === 5 && <ConfirmPinForm register={register} errors={errors} pinError={pinError} handleSubmit={handleSubmit(handleConfirmPin)} />}
-      {step === 6 && <h1>Registrasi Selesai</h1>}
     </div>
   );
 };

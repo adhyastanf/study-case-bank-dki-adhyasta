@@ -34,12 +34,12 @@ export default function reducer(state = initialState, action = {}) {
       };
     case RESET_REGISTER_DATA:
       return initialState;
-    // case FAILED:
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     message,
-    //   };
+    case FAILED:
+      return {
+        ...state,
+        isLoading: false,
+        message,
+      };
     case LOADING:
       return {
         ...state,
