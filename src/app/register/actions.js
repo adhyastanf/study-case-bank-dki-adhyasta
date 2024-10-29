@@ -10,6 +10,7 @@ export function AddRegisterForm(data, callback) {
       dispatch(setRegisterData({ userId: res.data.userId }));
       dispatch(loadingAction(false));
       dispatch(setStep(4));
+      location.href('/')
       callback('Berhasil registrasi');
     } catch (err) {
       dispatch(loadingAction(false));

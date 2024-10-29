@@ -3,26 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { setStep, setRegisterData, AddRegisterForm, AddPinForm } from './actions'; // Action to store data in Redux
 import Image from 'next/image';
 import LogoLRT from '../../assets/Logo_LRT_Jakarta.svg';
 import LogoBankDKI from '../../assets/Logo_Bank_DKI.svg';
 import LogoMaskot from '../../assets/Logo_Maskot.svg';
+import { validationSchema } from '@/utils/validationSchema';
 
-// Validation schema
-const validationSchema = yup.object().shape({
-  phone: yup.string().required('Nomor telepon harus diisi'),
-  name: yup.string().required('Nama harus diisi'),
-  birthDate: yup.date().required('Tanggal lahir harus diisi'),
-  birthPlace: yup.string().required('Tempat lahir harus diisi'),
-  email: yup.string().email('Email tidak valid').required('Email harus diisi'),
-  pin: yup.string().required('PIN harus diisi'),
-  confirmPin: yup.string().required('Konfirmasi PIN harus diisi'),
-});
-
-// Components
 const PhoneInput = ({ register, errors, handleNextStep }) => (
   <div className='flex flex-col items-center justify-center min-h-screen px-4 md:px-8 lg:px-16'>
     <h1 className='font-bold text-xl text-center mb-2'>LRT X JakOne Pay</h1>
@@ -208,13 +196,13 @@ const Register = () => {
 
   const resendOtp = () => {
     alert(`OTP ${DUMMY_OTP} telah dikirim kembali ke nomor yang diinput.`);
-    setTimeRemaining(30); // Reset the timer
-    setOtpError(''); // Clear any previous errors
+    setTimeRemaining(30);
+    setOtpError('');
   };
 
   const verifyOtp = () => {
     if (getValues('otp') === DUMMY_OTP) {
-      dispatch(setRegisterData({ otp: getValues('otp') })); // Store OTP in Redux
+      dispatch(setRegisterData({ otp: getValues('otp') }));
       dispatch(setStep(3));
     } else {
       setOtpError('OTP tidak valid');
@@ -222,7 +210,7 @@ const Register = () => {
   };
 
   const handleRegister = async (data) => {
-    dispatch(AddRegisterForm(data)); // Ensure 7this is awaited if it returns a promise
+    dispatch(AddRegisterForm(data)); 
   };
 
   const handleRegisterPin = (data) => {
@@ -232,18 +220,17 @@ const Register = () => {
   const handleConfirmPin = async (data) => {
     const { pin, confirmPin } = data;
 
-    // Periksa apakah PIN cocok
     if (pin === confirmPin) {
-      dispatch(AddPinForm({ pin, userId })); // Sesuaikan dengan struktur database Anda
-      setPinError(''); // Bersihkan pesan kesalahan sebelumnya
+      dispatch(AddPinForm({ pin, userId }));
+      setPinError('');
     } else {
-      setPinError('PIN tidak cocok, silakan coba lagi.'); // Set pesan kesalahan jika PIN tidak cocok
+      setPinError('PIN tidak cocok, silakan coba lagi.');
     }
   };
 
   const goBackToPhoneInput = () => {
     dispatch(setStep(1));
-    reset(); // Reset the form fields
+    reset();
     setOtpError('');
   };
 
@@ -262,7 +249,7 @@ const Register = () => {
         await handleRegister(data);
       } else if (step === 4) {
         handleRegisterPin(getValues());
-        dispatch(setStep(5)); // Move to confirm PIN step
+        dispatch(setStep(5));
       } else if (step === 5) {
         handleConfirmPin(getValues());
       }
